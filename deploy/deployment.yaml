@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: validator
+  name: validator
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: validator
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: validator
+    spec:
+      containers:
+      - image: rcanderson23/validator:v0.0.1-02
+        name: validator
+        ports:
+          - containerPort: 8443
+            name: https
+        volumeMounts:
+          - mountPath: /pki
+            name: pki
+        resources: {}
+      volumes:
+        - name: pki
+          secret:
+            secretName: validator-tls
+            
+status: {}

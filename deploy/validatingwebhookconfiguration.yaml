@@ -1,0 +1,21 @@
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: validator-webhook
+webhooks:
+  - name: validator-webhook.carsonisawesome.com
+    clientConfig:
+      service:
+        name: validator
+        namespace: kube-system
+        path: "/validate"
+      caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN0RENDQVp3Q0NRRDkwZzF4aFAxZDdEQU5CZ2txaGtpRzl3MEJBUXNGQURBY01Sb3dHQVlEVlFRRERCRlcKWVd4cFpHRjBiM0lnVjJWaWFHOXZhekFlRncweE9URXlNalV5TURJek16ZGFGdzB5TURBeE1qUXlNREl6TXpkYQpNQnd4R2pBWUJnTlZCQU1NRVZaaGJHbGtZWFJ2Y2lCWFpXSm9iMjlyTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGCkFBT0NBUThBTUlJQkNnS0NBUUVBcXR1VkhjUDhVb0lIdUxwMXBlOWhSQm4rVTJXV05mYUpCVHE3ZjlkbktJMDEKRFBwSjcwN2UrUmVzRjIxUzJYdDBpQVhqNk9NZGRsUnZiWHVxeGJxMFFEeXVRQ21kMExUZlJHcVQ2SGZtMzFRagpEUnFrWEE5V2J6WVRFZlZqZFE0WDR3N2dScjRRWFdkZFQrYWVwbGx6S3BnVVU1b2ptemgyb1JqTUhCODdHcmtaCmh6RDZMeWppenBTdXRVVldhUDc0WjIzeS9IZVBmR0JMRGJsU3ZTSGQyVHhrSmxJZE1OWCtKbkc5Y1doT3VCNFAKdDdqS2x4TzlPam1VQ1g0U2s0a3Azck9pSEhoNTkva1VQem84ZVhoZVUwK0RoeFJkR290cURPVzJ5Q1VpbGZpQQpRODlqUUJJVytYdE5QbUxYeUxzQTRBYmZScXJob0xJS2tBQnpqU0dKYlFJREFRQUJNQTBHQ1NxR1NJYjNEUUVCCkN3VUFBNElCQVFDUkl2Y2crbDFCU2F1NXIrOUlMYnpEZzRIeEVPUzkyR1V3Mzkrak5SSG81bXlqcGtQTmdWUWgKc01SanNZcWFidmpiaG5WWU5QMDlncm5QazBNcS9JR2F5alZRL1dSeHhGd0VjUmx4dHAxT2RHWmtOcjNoenpJOQp1TzJlSmFSNHR2U1FmNnNodTVxS3hPSFo3c2graWVsOFhUWm5oTTRDNHdwcXRCbWxsQzdmVnFuWVlKVnhYWjlNCmdUTXZENVpQTFp5YjF5RGZNRXZaQm1xN3dUbWVRcSt3K0NJeWdiSFRjSUtlcmdEOWszM3NsWjc2c2hPSk5tQ2gKUVpWVGhIUlBRWjg5amUwaUJhYnV3RGt0cUZBdk1pdzA5Z3BQdFV1Vnh4UkprS1FNdWpQQmlVSW9iY2NFRWZZTQphVURsZ3dVckd2Z1M5ZWdOVVhDVXROdWZkVXZaSGpMKwotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+    rules:
+      - operations: [ "CREATE" ]
+        apiGroups: ["apps", ""]
+        apiVersions: ["v1"]
+        resources: ["pods"]
+    namespaceSelector:
+      matchLabels:
+        validator: enabled
+
