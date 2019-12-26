@@ -18,7 +18,7 @@ standalone:
 	CGO_ENABLED=0 GOOS=linux $(GOBUILD) -a -ldflags '-w -extldflags "-static"' -o $(BIN_NAME) -v
 
 .PHONY: gen-pki
-gen-cert:
+gen-pki:
 	mkdir -p ${PKI_FOLDER}
 	openssl req -nodes -new -x509 -keyout ${PKI_FOLDER}/ca.key -out ${PKI_FOLDER}/ca.crt -subj "/CN=Validator Webhook"
 	openssl genrsa -out ${PKI_FOLDER}/server.key 2048
