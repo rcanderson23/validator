@@ -3,7 +3,7 @@ GOBUILD=$(GOCMD) build
 GOGET=$(GOCMD) get
 BIN_NAME=validator
 PKI_FOLDER=./pki
-DOCKER_TAG=rcanderson23/validator:v0.0.1-02
+DOCKER_TAG=rcanderson23/validator:v0.0.1-03
 
 .PHONY: build
 build:
@@ -34,4 +34,4 @@ push-container:
 
 .PHONY: deploy
 deploy:
-	kubectl create secret tls validator-tls -n kube-system --cert=${PKI_FOLDER}/server.crt --key=${PKI_FOLDER}/server.key
+	kubectl create secret generic validator-tls -n kube-system --from-file=${PKI_FOLDER}/server.crt --from-file=${PKI_FOLDER}/server.key
