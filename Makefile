@@ -34,4 +34,4 @@ push-container:
 
 .PHONY: deploy
 deploy:
-	kubectl create secret generic validator-tls -n kube-system --from-file=${PKI_FOLDER}/server.crt --from-file=${PKI_FOLDER}/server.key
+	kubectl create secret generic validator-tls --from-file=${PKI_FOLDER}/server.crt --from-file=${PKI_FOLDER}/server.key
