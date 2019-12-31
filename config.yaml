@@ -1,0 +1,13 @@
+Deployment:
+  labels:
+    foo: bar
+    bar: foo
+  image: nginx
+Pod:
+  labels:
+    foo: bar
+  image: nginx
+ReplicaSet:
+  labels:
+    foo: bar
+  image: nginx
