@@ -11,6 +11,7 @@ import (
 	//"k8s.io/klog"
 	corev1 "k8s.io/api/core/v1"
 	"log"
+	"regexp"
 )
 
 var (
@@ -63,11 +64,12 @@ func validate(req *admissionv1beta1.AdmissionRequest) admissionv1beta1.Admission
 
 	containers := pod.Spec.Containers
 	for i := 0; i < len(containers); i++ {
-		if pod.Spec.Containers[i].Image == "nginx" {
-			log.Printf("Condition not met, admission rejected.")
+		match, _ := regexp.MatchString(`^(\d{12})\.dkr\.ecr\.((\D{2})\-(\D*)\-(\d))\.amazonaws\.com/`, pod.Spec.Containers[i].Image)
+		if !match {
+			log.Printf("Regex does not match image, admission rejected.")
 			responseReview.Response.Allowed = false
 			responseReview.Response.Result = &metav1.Status{
-				Message: "Condition not met, admission rejected",
+				Message: "Regex does not match image, admission rejected",
 			}
 		}
 	}

@@ -33,7 +33,7 @@
 			"containers":[
 				{
 					"name": "nginx",
-					"image": "busybox"
+					"image": "188577429027.dkr.ecr.us-west-2.amazonaws.com/amazonlinux:latest"
 				}
 			]
 		}
