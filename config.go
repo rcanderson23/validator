@@ -1,6 +1,11 @@
 package main
 
 type Config struct {
+	ValidatorSpec *ValidatorSpec `yaml:"validatorSpec"`
+	TlsCert       string         `yaml:"tlsCert"`
+	TlsKey        string         `yaml:"tlsKey"`
+}
+type ValidatorSpec struct {
 	Deployment *Fields `yaml:"Deployment,omitempty"`
 	ReplicaSet *Fields `yaml:"ReplicaSet,omitempty"`
 	Pod        *Fields `yaml:"Pod,omitempty"`
