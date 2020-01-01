@@ -3,7 +3,7 @@ kind: ValidatingWebhookConfiguration
 metadata:
   name: validator-webhook
 webhooks:
-  - name: validator-webhook.carsonisawesome.com
+  - name: validator-webhook.carsonanderson.net
     clientConfig:
       service:
         name: validator
