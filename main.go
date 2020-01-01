@@ -23,6 +23,6 @@ func main() {
 		log.Fatalf("Failed to read config file: %v", err)
 	}
 	mux := http.NewServeMux()
-	mux.HandleFunc("/validate", validateFuncHandler)
+	mux.HandleFunc("/validate", config.ValidatorSpec.validateHandler)
 	log.Fatal(http.ListenAndServeTLS(":8443", config.TlsCert, config.TlsKey, mux))
 }

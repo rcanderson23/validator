@@ -18,7 +18,7 @@ var (
 	universalDeserializer = serializer.NewCodecFactory(runtime.NewScheme()).UniversalDeserializer()
 )
 
-func validateFuncHandler(w http.ResponseWriter, r *http.Request) {
+func (vs *ValidatorSpec) validateHandler(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Printf("Failure to read body: %v\n", err)
@@ -36,7 +36,7 @@ func validateFuncHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	adResponse := validate(adReview.Request)
+	adResponse := validate(adReview.Request, vs)
 	bytes, err := json.Marshal(&adResponse)
 	_, writeErr := w.Write(bytes)
 	if writeErr != nil {
@@ -44,7 +44,7 @@ func validateFuncHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func validate(req *admissionv1beta1.AdmissionRequest) admissionv1beta1.AdmissionReview {
+func validate(req *admissionv1beta1.AdmissionRequest, vs *ValidatorSpec) admissionv1beta1.AdmissionReview {
 	//setup AdmissionReview. Default to allow and then reject based on conditions
 	responseReview := admissionv1beta1.AdmissionReview{
 		Response: &admissionv1beta1.AdmissionResponse{
@@ -64,7 +64,7 @@ func validate(req *admissionv1beta1.AdmissionRequest) admissionv1beta1.Admission
 
 	containers := pod.Spec.Containers
 	for i := 0; i < len(containers); i++ {
-		match, _ := regexp.MatchString(`^(\d{12})\.dkr\.ecr\.((\D{2})\-(\D*)\-(\d))\.amazonaws\.com/`, pod.Spec.Containers[i].Image)
+		match, _ := regexp.MatchString(vs.Pod.Image, pod.Spec.Containers[i].Image)
 		if !match {
 			log.Printf("Regex does not match image, admission rejected.")
 			responseReview.Response.Allowed = false
