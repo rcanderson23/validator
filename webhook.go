@@ -9,6 +9,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 	"net/http"
 	//"k8s.io/klog"
+	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"log"
 	"regexp"
@@ -50,28 +51,51 @@ func validate(req *admissionv1beta1.AdmissionRequest, vs *ValidatorSpec) admissi
 		Response: &admissionv1beta1.AdmissionResponse{
 			UID:     req.UID,
 			Allowed: true,
+			Result: &metav1.Status{
+				Message: "",
+			},
 		},
 	}
-	if req.Kind.Kind != "Pod" {
 
+	switch req.Kind.Kind {
+	case "Pod":
+		object := &corev1.Pod{}
+		if _, _, err := universalDeserializer.Decode(req.Object.Raw, nil, object); err != nil {
+			log.Printf("Couldn't decode object: %v", err)
+		}
+		allowed, message := vs.checkContainers(&object.Spec)
+		responseReview.Response.Allowed = allowed
+		responseReview.Response.Result.Message = message
+	case "Deployment":
+		object := &appsv1.Deployment{}
+		if _, _, err := universalDeserializer.Decode(req.Object.Raw, nil, object); err != nil {
+			log.Printf("Couldn't decode object: %v", err)
+		}
+		allowed, message := vs.checkContainers(&object.Spec.Template.Spec)
+		responseReview.Response.Allowed = allowed
+		responseReview.Response.Result.Message = message
+	case "ReplicaSet":
+		object := &appsv1.ReplicaSet{}
+		if _, _, err := universalDeserializer.Decode(req.Object.Raw, nil, object); err != nil {
+			log.Printf("Couldn't decode object: %v", err)
+		}
+		allowed, message := vs.checkContainers(&object.Spec.Template.Spec)
+		responseReview.Response.Allowed = allowed
+		responseReview.Response.Result.Message = message
+	default:
 		return responseReview
 	}
-	pod := corev1.Pod{}
 
-	if _, _, err := universalDeserializer.Decode(req.Object.Raw, nil, &pod); err != nil {
-		log.Printf("Couldn't decode object: %v", err)
-	}
+	return responseReview
+}
 
-	containers := pod.Spec.Containers
-	for i := 0; i < len(containers); i++ {
-		match, _ := regexp.MatchString(vs.Pod.Image, pod.Spec.Containers[i].Image)
+func (vs *ValidatorSpec) checkContainers(podSpec *corev1.PodSpec) (bool, string) {
+	for i := 0; i < len(podSpec.Containers); i++ {
+		match, _ := regexp.MatchString(vs.Pod.Image, podSpec.Containers[i].Image)
 		if !match {
-			log.Printf("Regex does not match image, admission rejected.")
-			responseReview.Response.Allowed = false
-			responseReview.Response.Result = &metav1.Status{
-				Message: "Regex does not match image, admission rejected",
-			}
+			log.Println("Regex does not match image, admission rejected.")
+			return false, "Regex does not match image, admission rejected."
 		}
 	}
-	return responseReview
+	return true, ""
 }
