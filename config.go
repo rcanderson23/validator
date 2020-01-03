@@ -6,12 +6,12 @@ type Config struct {
 	TlsKey        string         `yaml:"tlsKey"`
 }
 type ValidatorSpec struct {
-	Deployment *Fields `yaml:"Deployment,omitempty"`
-	ReplicaSet *Fields `yaml:"ReplicaSet,omitempty"`
-	Pod        *Fields `yaml:"Pod,omitempty"`
+	Deployment *Fields `yaml:"Deployment"`
+	ReplicaSet *Fields `yaml:"ReplicaSet"`
+	Pod        *Fields `yaml:"Pod"`
 }
 
 type Fields struct {
-	Labels map[string]string `yaml:"labels,omitempty"`
-	Image  string            `yaml:"image,omitempty"`
+	Labels map[string]string `yaml:"labels"`
+	Image  string            `yaml:"image"`
 }
