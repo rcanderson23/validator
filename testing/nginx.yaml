@@ -5,6 +5,7 @@ metadata:
   namespace: testing
   labels:
     role: myrole
+    foo: bar
 spec:
   containers:
     - name: web

@@ -5,12 +5,10 @@ data:
       Pod:
         labels:
           foo: required
-          test: disabled
         image: ^(\d{12})\.dkr\.ecr\.((\D{2})\-(\D*)\-(\d))\.amazonaws\.com/
       Service:
         labels:
           foo: required
-          test: disabled
         disableLoadBalancer: true
     tlsCert: "/pki/server.crt"
     tlsKey: "/pki/server.key"

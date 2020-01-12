@@ -1,0 +1,21 @@
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: validator-webhook
+webhooks:
+  - name: validator-webhook.carsonanderson.net
+    clientConfig:
+      service:
+        name: validator
+        namespace: default
+        path: "/validate"
+      caBundle: CA_BUNDLE_B64
+    rules:
+      - operations: [ "CREATE", "UPDATE" ]
+        apiGroups: ["apps", ""]
+        apiVersions: ["v1"]
+        resources: ["pods","services"]
+    namespaceSelector:
+      matchLabels:
+        validator: enabled
+

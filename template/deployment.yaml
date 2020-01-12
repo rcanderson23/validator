@@ -18,7 +18,7 @@ spec:
         run: validator
     spec:
       containers:
-      - image: rcanderson23/validator:v0.0.1-06
+      - image: rcanderson23/validator:v0.0.1-04
         name: validator
         args:
         - --config-file=/config/config.yaml
