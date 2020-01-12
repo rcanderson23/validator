@@ -1,0 +1,39 @@
+{
+  "apiVersion": "admission.k8s.io/v1beta1",
+  "kind": "AdmissionReview",
+  "request": {
+    "uid": "705ab4f5-6393-11e8-b7cc-42010a800002",
+
+    "kind": {"group":"core","version":"v1","kind":"Service"},
+    "resource": {"group":"core","version":"v1","resource":"Service"},
+    "subResource": "",
+
+    "requestKind": {"group":"core","version":"v1","kind":"Service"},
+    "requestResource": {"group":"core","version":"v1","resource":"Service"},
+    "requestSubResource": "",
+
+    "name": "my-service",
+    "namespace": "my-namespace",
+
+    "operation": "CREATE",
+
+    "userInfo": {
+      "username": "admin",
+      "uid": "014fbff9a07c",
+      "groups": ["system:authenticated","my-admin-group"],
+      "extra": {
+        "some-key":["some-value1", "some-value2"]
+      }
+    },
+    "object": {
+	    	"apiVersion":"v1",
+	    	"kind":"Service",
+		"metadata": {"name": "hello-world"},
+		"spec": {
+			"type":	"LoadBalancer"	}
+    	},
+    "oldObject": {},
+
+    "dryRun": false
+  }
+}

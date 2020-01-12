@@ -9,7 +9,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 	"net/http"
 	//"k8s.io/klog"
-	appsv1 "k8s.io/api/apps/v1"
+	//appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"log"
 	"regexp"
@@ -75,7 +75,7 @@ func validate(req *admissionv1beta1.AdmissionRequest, vs *ValidatorSpec) admissi
 			if !allowed {
 				responseReview.Response.Allowed = allowed
 				responseReview.Response.Result.Message = message
-				break
+				return responseReview
 			}
 		}
 
@@ -84,32 +84,17 @@ func validate(req *admissionv1beta1.AdmissionRequest, vs *ValidatorSpec) admissi
 			responseReview.Response.Allowed = allowed
 			responseReview.Response.Result.Message = message
 		}
-	case "Deployment":
-		object := &appsv1.Deployment{}
+	case "Service":
+		object := &corev1.Service{}
 		if _, _, err := universalDeserializer.Decode(req.Object.Raw, nil, object); err != nil {
 			log.Printf("Couldn't decode object: %v", err)
 		}
-		allowed, message = checkLabels(object.Labels, vs.Deployment.Labels)
-		if !allowed {
-			responseReview.Response.Allowed = allowed
-			responseReview.Response.Result.Message = message
-			break
+		if vs.Service.DisableLoadBalancer && object.Spec.Type == "LoadBalancer" {
+			responseReview.Response.Allowed = false
+			responseReview.Response.Result.Message = "Services of type LoadBalancer are not allowed"
+			return responseReview
 		}
-		allowed, message = checkContainers(&object.Spec.Template.Spec, vs.Deployment.Image)
-		responseReview.Response.Allowed = allowed
-		responseReview.Response.Result.Message = message
-	case "ReplicaSet":
-		object := &appsv1.ReplicaSet{}
-		if _, _, err := universalDeserializer.Decode(req.Object.Raw, nil, object); err != nil {
-			log.Printf("Couldn't decode object: %v", err)
-		}
-		allowed, message = checkLabels(object.Labels, vs.ReplicaSet.Labels)
-		if !allowed {
-			responseReview.Response.Allowed = allowed
-			responseReview.Response.Result.Message = message
-			break
-		}
-		allowed, message = checkContainers(&object.Spec.Template.Spec, vs.ReplicaSet.Image)
+		allowed, message = checkLabels(object.Labels, vs.Service.Labels)
 		responseReview.Response.Allowed = allowed
 		responseReview.Response.Result.Message = message
 	default:
@@ -121,7 +106,6 @@ func validate(req *admissionv1beta1.AdmissionRequest, vs *ValidatorSpec) admissi
 
 func checkLabels(objectLabels map[string]string, requiredLabels map[string]string) (bool, string) {
 	for key := range requiredLabels {
-		log.Printf("checking label %s with value %s", key, objectLabels[key])
 		if _, ok := objectLabels[key]; !ok {
 			return false, "Required label not present"
 		}
