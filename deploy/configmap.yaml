@@ -2,21 +2,16 @@ apiVersion: v1
 data:
   config.yaml: |
     validatorSpec:
-      Deployment:
-        labels:
-          foo: required
-          test: disabled
-        image: ^(\d{12})\.dkr\.ecr\.((\D{2})\-(\D*)\-(\d))\.amazonaws\.com/
       Pod:
         labels:
           foo: required
           test: disabled
         image: ^(\d{12})\.dkr\.ecr\.((\D{2})\-(\D*)\-(\d))\.amazonaws\.com/
-      ReplicaSet:
+      Service:
         labels:
           foo: required
           test: disabled
-        image: ^(\d{12})\.dkr\.ecr\.((\D{2})\-(\D*)\-(\d))\.amazonaws\.com/`
+        disableLoadBalancer: true
     tlsCert: "/pki/server.crt"
     tlsKey: "/pki/server.key"
 kind: ConfigMap

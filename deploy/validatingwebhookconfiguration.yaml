@@ -14,7 +14,7 @@ webhooks:
       - operations: [ "CREATE" ]
         apiGroups: ["apps", ""]
         apiVersions: ["v1"]
-        resources: ["pods"]
+        resources: ["pods","services"]
     namespaceSelector:
       matchLabels:
         validator: enabled

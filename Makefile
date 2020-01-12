@@ -3,7 +3,7 @@ GOBUILD=$(GOCMD) build
 GOGET=$(GOCMD) get
 BIN_NAME=validator
 PKI_FOLDER=./pki
-DOCKER_TAG=rcanderson23/validator:v0.0.1-05
+DOCKER_TAG=rcanderson23/validator:v0.0.1-06
 
 .PHONY: build
 build:
