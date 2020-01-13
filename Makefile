@@ -22,7 +22,7 @@ gen-pki:
 	mkdir -p ${PKI_FOLDER}
 	openssl req -nodes -new -x509 -keyout ${PKI_FOLDER}/ca.key -out ${PKI_FOLDER}/ca.crt -subj "/CN=Validator Webhook"
 	openssl genrsa -out ${PKI_FOLDER}/server.key 2048
-	openssl req -new -key ${PKI_FOLDER}/server.key -subj "/CN=validator.kube-system.svc" | openssl x509 -req -CA ${PKI_FOLDER}/ca.crt -CAkey ${PKI_FOLDER}/ca.key -CAcreateserial -out ${PKI_FOLDER}/server.crt
+	openssl req -new -key ${PKI_FOLDER}/server.key -subj "/CN=validator.default.svc" | openssl x509 -req -CA ${PKI_FOLDER}/ca.crt -CAkey ${PKI_FOLDER}/ca.key -CAcreateserial -out ${PKI_FOLDER}/server.crt
 
 .PHONY: gen-container
 gen-container:
