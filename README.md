@@ -11,3 +11,8 @@ Installation Instructions
 1. Clone this repository
 2. Run `make gen-pki`
 3. Run `make deploy`
+
+Troubleshooting
+=========
+
+TLS errors in the validator pod usually indicate an issue with the CA_BUNDLE in the validatingwebhookconfiguration or mistake in the CN of the server certificate.
