@@ -12,6 +12,11 @@ Installation Instructions
 2. Run `make gen-pki`
 3. Run `make deploy`
 
+Uninstall Instructions
+=========
+
+1. Run `kubectl delete -f deploy/`
+
 Troubleshooting
 =========
 

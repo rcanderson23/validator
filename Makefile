@@ -36,5 +36,5 @@ push-container:
 deploy:
 	CA_BUNDLE=$(shell base64 pki/ca.crt); \
 	sed s/CA_BUNDLE_B64/$$CA_BUNDLE/ template/validatingwebhookconfiguration.yaml > deploy/validatingwebhookconfiguration.yaml;
-	kubectl create secret generic validator-tls --from-file=${PKI_FOLDER}/server.crt --from-file=${PKI_FOLDER}/server.key
+	kubectl create secret generic validator-tls --from-file=${PKI_FOLDER}/server.crt --from-file=${PKI_FOLDER}/server.key --dry-run -o yaml > deploy/secret.yaml
 	kubectl apply -f deploy/

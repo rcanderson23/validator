@@ -2,3 +2,4 @@ pki/
 .srl
 config.yaml
 validator
+deploy/secret.yaml
