@@ -11,6 +11,7 @@ Installation Instructions
 1. Clone this repository
 2. Run `make gen-pki`
 3. Run `make deploy`
+4. Label namespaces with `validator: enabled` that the webhook should be used on.
 
 Uninstall Instructions
 =========
