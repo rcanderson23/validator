@@ -75,6 +75,7 @@ func validate(req *admissionv1beta1.AdmissionRequest, vs *ValidatorSpec) admissi
 			if !allowed {
 				responseReview.Response.Allowed = allowed
 				responseReview.Response.Result.Message = message
+				responseReview.Response.Result.Code = 403
 				return responseReview
 			}
 		}
@@ -83,6 +84,7 @@ func validate(req *admissionv1beta1.AdmissionRequest, vs *ValidatorSpec) admissi
 			allowed, message = checkContainers(&object.Spec, vs.Pod.Image)
 			responseReview.Response.Allowed = allowed
 			responseReview.Response.Result.Message = message
+			responseReview.Response.Result.Code = 403
 		}
 	case "Service":
 		object := &corev1.Service{}
@@ -92,6 +94,7 @@ func validate(req *admissionv1beta1.AdmissionRequest, vs *ValidatorSpec) admissi
 		if vs.Service.DisableLoadBalancer && object.Spec.Type == "LoadBalancer" {
 			responseReview.Response.Allowed = false
 			responseReview.Response.Result.Message = "Services of type LoadBalancer are not allowed"
+			responseReview.Response.Result.Code = 403
 			return responseReview
 		}
 		allowed, message = checkLabels(object.Labels, vs.Service.Labels)
